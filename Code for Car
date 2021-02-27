@@ -1,0 +1,66 @@
+#include <Servo.h> 
+Servo servo1; 
+Servo servo2;
+int IRpin1 = A0;
+int IRpin2 = A4;
+int servopin1 = 10; 
+int servopin2 = 11;
+int val1 = 0;
+int val2 = 0;
+int threshold = 700;
+
+
+void setup() {
+  servo1.attach(servopin1);
+  servo2.attach(servopin2);
+
+}
+
+void robot_move(int s1, int s2, int d) {
+  servo1.writeMicroseconds(s1);
+  servo2.writeMicroseconds(s2);
+  delay(d);
+  
+}
+
+void forwards(int d) {
+  robot_move(1625,1375,d);
+}
+
+void backwards(int d) {
+  robot_move(1460,1570,d);
+}
+
+void right(int d) {
+  robot_move(1540,1540,d);
+}
+
+void left(int d) {
+  robot_move(1490,1400,d);
+}
+
+void halt (int d) {
+  robot_move(1500,1500,d);
+}
+
+void loop() {
+  val1 = analogRead (IRpin1);
+  val2 = analogRead (IRpin2);
+  Serial.print("val1  ");
+  Serial.print (val1);
+  Serial.print("  val2 ");
+  Serial.println(val2);
+  if (val1 >= threshold and val2 >= threshold) {
+    forwards(10);
+  }
+  if (val1 <= threshold and val2 >= threshold) {
+    right(10);
+  }
+  if (val1 >= threshold and val2 <= threshold) {
+    left(40);
+  }
+  if (val1 <= threshold and val2 <= threshold) {
+    backwards(300);
+  }
+
+}
